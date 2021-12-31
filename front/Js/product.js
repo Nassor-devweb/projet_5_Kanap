@@ -37,7 +37,6 @@ fetch("http://localhost:3000/api/products/" + idArticle)
 
 function insertCouleur(infoArticle){
     for (let couleur of infoArticle.colors){
-        console.table(couleur);
         const couleurArticle = document.createElement("option");
         couleurArticle.value = couleur;
         couleurArticle.innerHTML = couleur;
@@ -46,7 +45,7 @@ function insertCouleur(infoArticle){
 }
 
 function ajoutPanier(infoArticle){
-    document.querySelector("#addToCart").addEventListener("click", function(){
+    document.getElementById("addToCart").addEventListener("click", function(){
         if(document.getElementById("quantity").value != 0 ){
             let quantityProduit = parseInt(document.getElementById("quantity").value);
             let couleurProduit = document.getElementById("colors").value;
@@ -58,29 +57,37 @@ function ajoutPanier(infoArticle){
                 prixArticlePanier: infoArticle.price,
                 nomProduit : infoArticle.name
             }
-        
             let recupLocalstorage = JSON.parse(localStorage.getItem("Article"));
             console.table(recupLocalstorage);
 
             if (recupLocalstorage == null){
-                localStorage.setItem("Article", JSON.stringify(caracterProduit));
-            }
-
-            if (recupLocalstorage != null){ 
+                recupLocalstorage =[];
+                recupLocalstorage.push(caracterProduit);
+                localStorage.setItem("Article", JSON.stringify(recupLocalstorage));
+            } else {
+                const searchStorage = recupLocalstorage.find( (el) => el.idArticlePanier === idArticle && el.colorArticlePanier === couleurProduit);
+                //Si le produit commandé est déjà dans le panier
+                if (searchStorage) {
+                    let nvQuantity = caracterProduit.quantiteArticlePanier + searchStorage.quantiteArticlePanier;
+                    searchStorage.quantiteArticlePanier = nvQuantity;
+                    localStorage.setItem("Article", JSON.stringify(recupLocalstorage));
+                //Si le produit commandé n'est pas dans le panier
+                } else {
+                    recupLocalstorage.push(caracterProduit);
+                    localStorage.setItem("Article", JSON.stringify(recupLocalstorage));
+                }
+            }       
+        }else {
+            window.alert("Veuillez choisir une Quantité");
+        }
+    });
+}
+            /*if (recupLocalstorage != null){ 
                     if (recupLocalstorage.idArticlePanier === caracterProduit.idArticle && recupLocalstorage.colorArticlePanier === caracterProduit.couleurProduit){
                         let nouvQuantity = caracterProduit.quantiteArticlePanier + recupLocalstorage.quantiteArticlePanier;
                         recupLocalstorage.quantiteArticlePanier = nouvQuantity;
                         localStorage.setItem("Article", JSON.stringify(caracterProduit));
-                    }
-            console.table(recupLocalstorage);
-            }
-        }
-    });
-}
-
-
-
-
+                    }*/
 /*if (lien.has('id')){
     let idLien = lien.get('id');
 }
