@@ -1,10 +1,8 @@
 //let lienArticle = window.location.search;
 let lienArticle = window.location.href;
-console.log(lienArticle);
 let lien = new URL(lienArticle);
 let idArticle = lien.searchParams.get("id");
 let infoArticle = "";
-console.log(idArticle);
 
 fetch("http://localhost:3000/api/products/" + idArticle)
 .then(function(response){
@@ -66,12 +64,10 @@ function ajoutPanier(infoArticle){
                 localStorage.setItem("Article", JSON.stringify(recupLocalstorage));
             } else {
                 const searchStorage = recupLocalstorage.find( (el) => el.idArticlePanier === idArticle && el.colorArticlePanier === couleurProduit);
-                //Si le produit commandé est déjà dans le panier
                 if (searchStorage) {
                     let nvQuantity = caracterProduit.quantiteArticlePanier + searchStorage.quantiteArticlePanier;
                     searchStorage.quantiteArticlePanier = nvQuantity;
                     localStorage.setItem("Article", JSON.stringify(recupLocalstorage));
-                //Si le produit commandé n'est pas dans le panier
                 } else {
                     recupLocalstorage.push(caracterProduit);
                     localStorage.setItem("Article", JSON.stringify(recupLocalstorage));
