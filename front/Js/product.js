@@ -51,9 +51,11 @@ function ajoutPanier(infoArticle){
             let caracterProduit = {
                 quantiteArticlePanier : quantityProduit,
                 colorArticlePanier : couleurProduit,
+                imgProduitPanier: infoArticle.imageUrl,
                 idArticlePanier : idArticle,
                 prixArticlePanier: infoArticle.price,
-                nomProduit : infoArticle.name
+                nomProduit : infoArticle.name,
+                altImgProduitPanier : infoArticle.altTxt
             }
             let recupLocalstorage = JSON.parse(localStorage.getItem("Article"));
             console.table(recupLocalstorage);
