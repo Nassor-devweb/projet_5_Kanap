@@ -63,7 +63,7 @@ function ajoutPanier(infoArticle){
                 recupLocalstorage.push(caracterProduit);
                 localStorage.setItem("Article", JSON.stringify(recupLocalstorage));
             } else {
-                const searchStorage = recupLocalstorage.find( (el) => el.idArticlePanier === idArticle && el.colorArticlePanier === couleurProduit);
+                const searchStorage = recupLocalstorage.find( (strg) => strg.idArticlePanier === idArticle && strg.colorArticlePanier === couleurProduit);
                 if (searchStorage) {
                     let nvQuantity = caracterProduit.quantiteArticlePanier + searchStorage.quantiteArticlePanier;
                     searchStorage.quantiteArticlePanier = nvQuantity;
