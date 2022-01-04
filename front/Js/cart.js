@@ -28,9 +28,13 @@ function recupLocalStorage(){
     
             const appndTitle = document.createElement("h2");
             appndTitle.innerHTML = contenuLocalStorage[produit].nomProduit;
+            appndTitle.className = contenuLocalStorage[produit].idArticlePanier;
+            appndTitle.id = 'idP';
     
             const appndTitleColor = document.createElement("p");
             appndTitleColor.innerHTML = contenuLocalStorage[produit].colorArticlePanier;
+            appndTitleColor.className = "colorB";
+            
     
             const appndPrice = document.createElement("p");
             appndPrice.innerHTML = contenuLocalStorage[produit].prixArticlePanier + " €";
@@ -58,8 +62,6 @@ function recupLocalStorage(){
             let appndSupprimer = document.createElement("p");
             appndSupprimer.className = "deleteItem";
             appndSupprimer.innerHTML = "Supprimer";
-
-
 
             document.getElementById("cart__items").appendChild(appndArticle);
             appndArticle.appendChild(appndDiv);
@@ -94,3 +96,54 @@ function recupLocalStorage(){
 }
 recupLocalStorage();
 
+
+function prixQuantiteTotal(){  
+        let totalPanier = 0;
+        let qauntiteProduitTot = 0;
+        if (contenuLocalStorage !== null){          
+            for (let i = 0; i < contenuLocalStorage.length; i++){
+            let quantiteProduit = contenuLocalStorage[i].quantiteArticlePanier;
+            let prixProduit = contenuLocalStorage[i].prixArticlePanier;
+            qauntiteProduitTot += quantiteProduit ; 
+            totalPanier +=  quantiteProduit * prixProduit; 
+            }   
+        }else{
+            totalPanier =  0;
+            document.getElementById('totalPrice').innerHTML = totalPanier;
+        }
+    console.log(totalPanier);
+    document.getElementById('totalPrice').innerHTML = totalPanier;
+    document.getElementById('totalQuantity').innerHTML = qauntiteProduitTot;
+}
+
+prixQuantiteTotal();
+
+function modificationQ () {
+
+    if (recupLocalStorage !== null){
+
+        inptQt = document.querySelectorAll(".itemQuantity");
+        classElementColorinit = document.getElementsByClassName('colorB');
+        idElementsInit = document.querySelectorAll("#idP");
+        console.log(idElementsInit);
+        for (let k = 0; k < inptQt.length; k++){
+            inptQt[k].addEventListener("change" , (e) => {
+                e.preventDefault();
+
+                let classElementColor = classElementColorinit[k].innerHTML;
+                let idElements = idElementsInit[k].className;
+                let newQuantity = inptQt[k].valueAsNumber;
+
+                contenuLocalStorage.forEach(function(comp) {
+                    if (comp.quantiteArticlePanier !== newQuantity && comp.idArticlePanier == idElements && comp.colorArticlePanier == classElementColor && newQuantity >= 0) {
+                    comp.quantiteArticlePanier = newQuantity;
+                    localStorage.setItem("Article", JSON.stringify(contenuLocalStorage));            
+                    }
+                });
+                location.reload();
+            }) 
+        }
+    }  
+}
+
+modificationQ ();

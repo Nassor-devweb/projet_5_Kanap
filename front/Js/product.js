@@ -44,7 +44,7 @@ function insertCouleur(infoArticle){
 
 function ajoutPanier(infoArticle){
     document.getElementById("addToCart").addEventListener("click", function(){
-        if(document.getElementById("quantity").value != 0 ){
+        if(document.getElementById("quantity").value > 0 ){
             let quantityProduit = parseInt(document.getElementById("quantity").value);
             let couleurProduit = document.getElementById("colors").value;
 
@@ -64,15 +64,18 @@ function ajoutPanier(infoArticle){
                 recupLocalstorage =[];
                 recupLocalstorage.push(caracterProduit);
                 localStorage.setItem("Article", JSON.stringify(recupLocalstorage));
+                window.alert("Produit ajouté au panier");
             } else {
                 const searchStorage = recupLocalstorage.find( (strg) => strg.idArticlePanier === idArticle && strg.colorArticlePanier === couleurProduit);
                 if (searchStorage) {
                     let nvQuantity = caracterProduit.quantiteArticlePanier + searchStorage.quantiteArticlePanier;
                     searchStorage.quantiteArticlePanier = nvQuantity;
                     localStorage.setItem("Article", JSON.stringify(recupLocalstorage));
+                    window.alert("Produit ajouté au panier");
                 } else {
                     recupLocalstorage.push(caracterProduit);
                     localStorage.setItem("Article", JSON.stringify(recupLocalstorage));
+                    window.alert("Produit ajouté au panier");
                 }
             }       
         }else {
