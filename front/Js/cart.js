@@ -4,7 +4,7 @@ console.table(contenuLocalStorage);
 
 function recupLocalStorage(){
 
-    if (contenuLocalStorage !== null){
+    if (contenuLocalStorage !== null || contenuLocalStorage == 0 ){
         for (let produit in contenuLocalStorage){
     
             const appndArticle = document.createElement("article"); // création d'une balise article
@@ -121,13 +121,12 @@ prixQuantiteTotal();
 function modificationQ () {
 
     if (recupLocalStorage !== null){
-
         inptQt = document.querySelectorAll(".itemQuantity");
         classElementColorinit = document.getElementsByClassName('colorB');
         idElementsInit = document.querySelectorAll("#idP");
         console.log(idElementsInit);
         for (let k = 0; k < inptQt.length; k++){
-            inptQt[k].addEventListener("change" , (e) => {
+            inptQt[k].addEventListener("change" , function(e) {
                 e.preventDefault();
 
                 let classElementColor = classElementColorinit[k].innerHTML;
@@ -144,6 +143,38 @@ function modificationQ () {
             }) 
         }
     }  
+
 }
 
 modificationQ ();
+
+function suppressionProduit(){
+
+    let suppElement = document.querySelectorAll(".deleteItem");
+    console.log(suppElement);
+    let classElementColorinit = document.getElementsByClassName('colorB');
+    let idElementsInit = document.querySelectorAll("#idP");
+
+    for ( let j = 0 ; j <= suppElement.length -1 ; j++){
+        suppElement[j].addEventListener("click", function(e) {
+            e.preventDefault();
+
+            let classElementColor = classElementColorinit[j].innerHTML;
+            let idElements = idElementsInit[j].className;
+
+            contenuLocalStorage = contenuLocalStorage.filter( supp => supp.idArticlePanier !== idElements || supp.colorArticlePanier !== classElementColor );
+            localStorage.setItem("Article", JSON.stringify(contenuLocalStorage));            
+            location.reload();
+        });
+    }
+    console.log(suppElement);
+    if (suppElement.length == 0){
+        localStorage.clear();
+       /* arretReload = 0;
+        while ( arretReload == 0 ){
+            location.reload();
+            arretReload++ ;
+        } */
+    } 
+}
+suppressionProduit();
