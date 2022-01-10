@@ -75,7 +75,6 @@ function ajoutPanier(infoArticle){
                 } else {
                     recupLocalstorage.push(caracterProduit);
                     localStorage.setItem("Article", JSON.stringify(recupLocalstorage));
-                    window.alert("Produit ajouté au panier");
                 }
             }       
         }else {
@@ -83,13 +82,3 @@ function ajoutPanier(infoArticle){
         }
     });
 }
-            /*if (recupLocalstorage != null){ 
-                    if (recupLocalstorage.idArticlePanier === caracterProduit.idArticle && recupLocalstorage.colorArticlePanier === caracterProduit.couleurProduit){
-                        let nouvQuantity = caracterProduit.quantiteArticlePanier + recupLocalstorage.quantiteArticlePanier;
-                        recupLocalstorage.quantiteArticlePanier = nouvQuantity;
-                        localStorage.setItem("Article", JSON.stringify(caracterProduit));
-                    }*/
-/*if (lien.has('id')){
-    let idLien = lien.get('id');
-}
-console.log(idLien);*/

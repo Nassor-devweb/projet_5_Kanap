@@ -178,3 +178,56 @@ function suppressionProduit(){
     } 
 }
 suppressionProduit();
+
+function envoiDataForm(){
+
+    document.getElementById("order").addEventListener("click", function(e) {
+        let prenom = document.getElementById('firstName');
+        let nom = document.getElementById('lastName');
+        let adressePost = document.getElementById('address');
+        let ville = document.getElementById('city');
+        let adresseEmail = document.getElementById('email');
+
+        let IdCom = [];
+        for (let i = 0; i<contenuLocalStorage.length;i++) {
+            IdCom.push(contenuLocalStorage[i].idArticlePanier);
+        };
+        const infoContact = {
+            contact : {
+                firstName: prenom.value,
+                lastName: nom.value,
+                address: adressePost.value,
+                city: ville.value,
+                email: adresseEmail.value,
+            },
+            products: IdCom,
+        } 
+
+        console.log(infoContact);
+
+        fetch("http://localhost:3000/api/products/order", {
+
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json', 
+                "Content-Type": "application/json" 
+            },
+            body: JSON.stringify(infoContact)
+        })
+        .then(function(res) {
+            if (res.ok) {
+              return res.json();
+            }
+        })
+        .then(function(data) {
+            localStorage.clear();
+            localStorage.setItem("idCom",data.orderId);
+            document.location.href = "confirmation.html";
+        })
+      
+        .catch((err) => {
+            alert ("Envoie des données échoué " + err.message);
+        });   
+    });
+}
+envoiDataForm();
