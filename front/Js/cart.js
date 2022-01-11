@@ -2,15 +2,15 @@ let contenuLocalStorage = JSON.parse(localStorage.getItem("Article")); // Import
 console.table(contenuLocalStorage);
 
 
-function recupLocalStorage(){
+function recupLocalStorage(){                                                            // Fonction permettant le contenu du local storage dans la page panier.
 
-    if (contenuLocalStorage !== null || contenuLocalStorage == 0 ){
+    if (contenuLocalStorage !== null ){                                                 // si local storage contient des données alors 
         for (let produit in contenuLocalStorage){
     
-            const appndArticle = document.createElement("article"); // création d'une balise article
-            appndArticle.className = "cart__item";  // création d'une class cart_item 
-            appndArticle.setAttribute('data-color', contenuLocalStorage[produit].colorArticlePanier); // insertition d'un attribut avec comme valeur la couleur du produit
-            appndArticle.setAttribute('data-id', contenuLocalStorage[produit].idArticlePanier);  // insertition d'un attribut avec comme valeur l'ID du produit.
+            const appndArticle = document.createElement("article");                                              // création d'une balise article
+            appndArticle.className = "cart__item";                                                              // création d'une class cart_item 
+            appndArticle.setAttribute('data-color', contenuLocalStorage[produit].colorArticlePanier);          // insertition d'un attribut avec comme valeur la couleur du produit
+            appndArticle.setAttribute('data-id', contenuLocalStorage[produit].idArticlePanier);               // insertition d'un attribut avec comme valeur l'ID du produit.
     
     
             const appndDiv = document.createElement("div");     
@@ -182,6 +182,7 @@ suppressionProduit();
 function envoiDataForm(){
 
     document.getElementById("order").addEventListener("click", function(e) {
+        e.preventDefault();
         let prenom = document.getElementById('firstName');
         let nom = document.getElementById('lastName');
         let adressePost = document.getElementById('address');
@@ -215,6 +216,7 @@ function envoiDataForm(){
             body: JSON.stringify(infoContact)
         })
         .then(function(res) {
+            console.log(res);
             if (res.ok) {
               return res.json();
             }
