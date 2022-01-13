@@ -1,17 +1,15 @@
 let contenuLocalStorage = JSON.parse(localStorage.getItem("Article")); // Importation du contenu du local storage dans la variable.
 console.table(contenuLocalStorage);
 
+function recupLocalStorage(){               // Fonction permettant d'inserer le contenu du local storage dans la page panier.
 
-function recupLocalStorage(){                                                            // Fonction permettant le contenu du local storage dans la page panier.
-
-    if (contenuLocalStorage !== null ){                                                 // si local storage contient des données alors 
+    if (contenuLocalStorage !== null ){                                              
         for (let produit in contenuLocalStorage){
     
-            const appndArticle = document.createElement("article");                                              // création d'une balise article
-            appndArticle.className = "cart__item";                                                              // création d'une class cart_item 
-            appndArticle.setAttribute('data-color', contenuLocalStorage[produit].colorArticlePanier);          // insertition d'un attribut avec comme valeur la couleur du produit
-            appndArticle.setAttribute('data-id', contenuLocalStorage[produit].idArticlePanier);               // insertition d'un attribut avec comme valeur l'ID du produit.
-    
+            const appndArticle = document.createElement("article");                                              
+            appndArticle.className = "cart__item";                                                              
+            appndArticle.setAttribute('data-color', contenuLocalStorage[produit].colorArticlePanier);         
+            appndArticle.setAttribute('data-id', contenuLocalStorage[produit].idArticlePanier);               
     
             const appndDiv = document.createElement("div");     
             appndDiv.className = "cart__item__img";
@@ -48,7 +46,7 @@ function recupLocalStorage(){                                                   
             const appndproductQte = document.createElement("p");
             appndproductQte.innerHTML = "Qté : ";
     
-            let appndQuantityProduit = document.createElement("input");
+            const appndQuantityProduit = document.createElement("input");
             appndQuantityProduit.value = contenuLocalStorage[produit].quantiteArticlePanier;
             appndQuantityProduit.className = "itemQuantity";
             appndQuantityProduit.setAttribute("type", "number");
@@ -56,10 +54,10 @@ function recupLocalStorage(){                                                   
             appndQuantityProduit.setAttribute("max", "100");
             appndQuantityProduit.setAttribute("name", "itemQuantity");
     
-            let appndSettingsDelete = document.createElement("div");
+            const appndSettingsDelete = document.createElement("div");
             appndSettingsDelete.className = "cart__item__content__settings__delete";
     
-            let appndSupprimer = document.createElement("p");
+            const appndSupprimer = document.createElement("p");
             appndSupprimer.className = "deleteItem";
             appndSupprimer.innerHTML = "Supprimer";
 
@@ -81,30 +79,27 @@ function recupLocalStorage(){                                                   
         }
     } else {
     
-        const appndArticle = document.createElement("article"); // création d'une balise article
-        appndArticle.className = "cart__item";  // création d'une class cart_item 
-
-        const alertPanierVide = document.createElement("p");
-        alertPanierVide.style.color = "red";
-        alertPanierVide.style.fontSize = "30px";
-        alertPanierVide.innerHTML = "Votre panier est vide !!!";
-
-        document.getElementById("cart__items").appendChild(appndArticle);
-        appndArticle.appendChild(alertPanierVide);
+            const appndArticle = document.createElement("article"); 
+            appndArticle.className = "cart__item";  
+            const alertPanierVide = document.createElement("p");
+            alertPanierVide.style.color = "red";
+            alertPanierVide.style.fontSize = "30px";
+            alertPanierVide.innerHTML = "Votre panier est vide !!!";
+            document.getElementById("cart__items").appendChild(appndArticle);
+            appndArticle.appendChild(alertPanierVide);
     }
 
 }
-recupLocalStorage();
+recupLocalStorage();   // Appel de la fonction recupLocalStorage
 
-
-function prixQuantiteTotal(){  
+function prixQuantiteTotal(){           // Fonction permettant d'afficher le prix total ainsi que la quantité totale
         let totalPanier = 0;
-        let qauntiteProduitTot = 0;
+        let quantiteProduitTot = 0;
         if (contenuLocalStorage !== null){          
             for (let i = 0; i < contenuLocalStorage.length; i++){
             let quantiteProduit = contenuLocalStorage[i].quantiteArticlePanier;
             let prixProduit = contenuLocalStorage[i].prixArticlePanier;
-            qauntiteProduitTot += quantiteProduit ; 
+            quantiteProduitTot += quantiteProduit ; 
             totalPanier +=  quantiteProduit * prixProduit; 
             }   
         }else{
@@ -113,12 +108,12 @@ function prixQuantiteTotal(){
         }
     console.log(totalPanier);
     document.getElementById('totalPrice').innerHTML = totalPanier;
-    document.getElementById('totalQuantity').innerHTML = qauntiteProduitTot;
+    document.getElementById('totalQuantity').innerHTML = quantiteProduitTot;
 }
 
-prixQuantiteTotal();
+prixQuantiteTotal();   // Appel de la fonction prixQuantiteTotal
 
-function modificationQ () {
+function modificationQ () {     // Fonction permettant de mettre à jour le prix total après modification de la quantitée.
 
     if (recupLocalStorage !== null){
         inptQt = document.querySelectorAll(".itemQuantity");
@@ -146,9 +141,9 @@ function modificationQ () {
 
 }
 
-modificationQ ();
+modificationQ ();         // Appel de la fonction modificationQ
 
-function suppressionProduit(){
+function suppressionProduit(){           // Fonction permettant de supprimer un article via le panier
 
     let suppElement = document.querySelectorAll(".deleteItem");
     console.log(suppElement);
@@ -177,59 +172,126 @@ function suppressionProduit(){
         } */
     } 
 }
-suppressionProduit();
+suppressionProduit();                       // Appel de la fonction suppressionProduit
 
-function envoiDataForm(){
+function verifForm(){                       // Fonction permettant la validation du formulaire 
 
-    document.getElementById("order").addEventListener("click", function(e) {
+    inputFirstName = document.getElementById('firstName');
+    inputLastName  = document.getElementById('lastName');
+    inputAddress  = document.getElementById('address');
+    inputCity  = document.getElementById('city');
+    inputEmail  = document.getElementById('email');
+
+    inputFirstName.addEventListener('change',function(e){
         e.preventDefault();
-        let prenom = document.getElementById('firstName');
-        let nom = document.getElementById('lastName');
-        let adressePost = document.getElementById('address');
-        let ville = document.getElementById('city');
-        let adresseEmail = document.getElementById('email');
-
-        let IdCom = [];
-        for (let i = 0; i<contenuLocalStorage.length;i++) {
-            IdCom.push(contenuLocalStorage[i].idArticlePanier);
-        };
-        const infoContact = {
-            contact : {
-                firstName: prenom.value,
-                lastName: nom.value,
-                address: adressePost.value,
-                city: ville.value,
-                email: adresseEmail.value,
-            },
-            products: IdCom,
+        let regNomPrenom = new RegExp("^[a-zA-Z ,.'-]+$");
+        if (regNomPrenom.test(inputFirstName.value)) {
+            inputFirstName.nextElementSibling.innerHTML = '<i class="fas fa-check"></i>';
+        } else {
+            inputFirstName.nextElementSibling.innerHTML = 'Format de saisi inccorect';
         } 
-
-        console.log(infoContact);
-
-        fetch("http://localhost:3000/api/products/order", {
-
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json', 
-                "Content-Type": "application/json" 
-            },
-            body: JSON.stringify(infoContact)
-        })
-        .then(function(res) {
-            console.log(res);
-            if (res.ok) {
-              return res.json();
-            }
-        })
-        .then(function(data) {
-            localStorage.clear();
-            localStorage.setItem("idCom",data.orderId);
-            document.location.href = "confirmation.html";
-        })
-      
-        .catch((err) => {
-            alert ("Envoie des données échoué " + err.message);
-        });   
     });
+
+    inputLastName.addEventListener('change',function(e){
+        e.preventDefault();
+        let regNomPrenom = new RegExp("^[a-zA-Z ,.'-]+$");
+        if (regNomPrenom.test(inputLastName.value)) {
+            inputLastName.nextElementSibling.innerHTML = '<i class="fas fa-check"></i>';
+        } else {
+            inputLastName.nextElementSibling.innerHTML = 'Format de saisi inccorect';
+        } 
+    });
+
+    inputAddress.addEventListener('change',function(e){
+        e.preventDefault();
+        let regAdress = new RegExp("^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+");
+        if (regAdress.test(inputAddress.value)) {
+            inputAddress.nextElementSibling.innerHTML = '<i class="fas fa-check"></i>';
+        } else {
+            inputAddress.nextElementSibling.innerHTML = 'Format de saisi inccorect';
+        } 
+    });
+
+    inputCity.addEventListener('change',function(e){
+        e.preventDefault();
+        let regNomPrenom = new RegExp("^[a-zA-Z ,.'-]+$");
+        if (regNomPrenom.test(inputCity.value)) {
+            inputCity.nextElementSibling.innerHTML = '<i class="fas fa-check"></i>';
+        } else {
+            inputCity.nextElementSibling.innerHTML = 'Format de saisi inccorect';
+        } 
+    });
+
+    inputEmail.addEventListener('change',function(e){
+        e.preventDefault();
+        let regNomPrenom = new RegExp('^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$');
+        if (regNomPrenom.test(inputEmail.value)) {
+            inputEmail.nextElementSibling.innerHTML = '<i class="fas fa-check"></i>';
+        } else {
+            inputEmail.nextElementSibling.innerHTML = 'Format de saisi inccorect';
+        } 
+    });
+
 }
-envoiDataForm();
+verifForm();                                // Appel de la fonction verifForm
+
+
+function envoiDataForm(){                 // Fonction permettant l'envoie des données
+    
+        document.getElementById("order").addEventListener("click", function(e) {
+            e.preventDefault();
+            if (contenuLocalStorage !== null){
+                const prenom = document.getElementById('firstName');
+                const nom = document.getElementById('lastName');
+                const adressePost = document.getElementById('address');
+                const ville = document.getElementById('city');
+                const adresseEmail = document.getElementById('email');
+        
+                const IdCom = [];
+                for (let i = 0; i<contenuLocalStorage.length;i++) {
+                    IdCom.push(contenuLocalStorage[i].idArticlePanier);
+                };
+                const infoContact = {
+                    contact : {
+                        firstName: prenom.value,
+                        lastName: nom.value,
+                        address: adressePost.value,
+                        city: ville.value,
+                        email: adresseEmail.value,
+                    },
+                    products: IdCom,
+                } 
+        
+                console.log(infoContact);
+        
+                fetch("http://localhost:3000/api/products/order", {
+        
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json', 
+                        "Content-Type": "application/json" 
+                    },
+                    body: JSON.stringify(infoContact)
+                })
+                .then(function(res) {
+                    console.log(res);
+                    if (res.ok) {
+                    return res.json();
+                    }
+                })
+                .then(function(data) {
+                    localStorage.clear();
+                    localStorage.setItem("idCom",data.orderId);
+                    document.location.href = "confirmation.html";
+                })
+            
+                .catch((err) => {
+                    alert ("Envoie des données échoué " + err.message);
+                });   
+            }else{
+                window.alert ("Envoi du formulaire impossible car Panier vide !!!");
+            }
+        });
+    
+}
+envoiDataForm();                          // Appel de la fonction envoiDataForm

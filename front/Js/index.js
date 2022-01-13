@@ -1,3 +1,4 @@
+let apiArticle = "";
 fetch("http://localhost:3000/api/products")
 .then(function(response){
     if (response.ok) {
@@ -5,10 +6,14 @@ fetch("http://localhost:3000/api/products")
     }
 })
 .then(function(valResponse){
-    const apiArticle = valResponse;
-    console.table(apiArticle);
-    //for (let i=0; i<= valResponse.length-1; i++){
-    // let positionTab = i ;
+    let apiArticle = valResponse;
+    appendElenment(apiArticle); 
+})
+.catch(function(err){
+    alert ("Récuperation des données API impossible" + err.message);
+});
+
+function appendElenment(apiArticle){        // Fonction permettant d'afficher les differents produit dans la page d'accueil
     for (let posArticle in apiArticle) {
 
         const insertLien = document.createElement("a");
@@ -34,7 +39,4 @@ fetch("http://localhost:3000/api/products")
         divArticle.appendChild(nomArticle);
         divArticle.appendChild(descriptionArticle);
     }
-})
-.catch(function(err){
-    return err;
-});
+}
