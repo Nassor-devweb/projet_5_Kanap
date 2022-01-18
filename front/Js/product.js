@@ -1,7 +1,7 @@
 //let lienArticle = window.location.search;
 let lienArticle = window.location.href;
 let lien = new URL(lienArticle);
-let idArticle = lien.searchParams.get("id");
+let idArticle = lien.searchParams.get("id"); // Permet de récupérer la valeur de l'ID issue de location.href
 let infoArticle = "";
 
 fetch("http://localhost:3000/api/products/" + idArticle)

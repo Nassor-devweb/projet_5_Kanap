@@ -1,3 +1,6 @@
+const regexLFrstNameCity = "^[a-zA-Z ,.'-]+$";
+const regexAdress = "^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+";
+const regexEmail = '^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$';
 let contenuLocalStorage = JSON.parse(localStorage.getItem("Article")); // Importation du contenu du local storage dans la variable.
 console.table(contenuLocalStorage);
 
@@ -165,14 +168,27 @@ function suppressionProduit(){           // Fonction permettant de supprimer un 
     console.log(suppElement);
     if (suppElement.length == 0){
         localStorage.clear();
-       /* arretReload = 0;
-        while ( arretReload == 0 ){
-            location.reload();
-            arretReload++ ;
-        } */
     } 
 }
 suppressionProduit();                       // Appel de la fonction suppressionProduit
+
+function validationForm(inputf,regexf){                // La fonction indique à l'utilisateur si la valeur saisie respect le format de text
+    inputf.addEventListener('change',function(e){
+        e.preventDefault();
+        let objetRegex = new RegExp(regexf);
+        if (objetRegex.test(inputf.value)) {
+            inputf.nextElementSibling.innerHTML = '<i class="fas fa-check"></i>';
+            inputf.className = "ok";
+        } else {
+            inputf.nextElementSibling.innerHTML = 'Format de saisi inccorect';
+            inputf.className = "incorrect";
+        } 
+    });
+}
+
+function verifRegex (value,regex){             // La fonction retourne true si la valeur saisir respect le regex
+    return new RegExp(regex).test(value);
+}
 
 function verifForm(){                       // Fonction permettant la validation du formulaire 
 
@@ -182,59 +198,14 @@ function verifForm(){                       // Fonction permettant la validation
     inputCity  = document.getElementById('city');
     inputEmail  = document.getElementById('email');
 
-    inputFirstName.addEventListener('change',function(e){
-        e.preventDefault();
-        let regNomPrenom = new RegExp("^[a-zA-Z ,.'-]+$");
-        if (regNomPrenom.test(inputFirstName.value)) {
-            inputFirstName.nextElementSibling.innerHTML = '<i class="fas fa-check"></i>';
-        } else {
-            inputFirstName.nextElementSibling.innerHTML = 'Format de saisi inccorect';
-        } 
-    });
-
-    inputLastName.addEventListener('change',function(e){
-        e.preventDefault();
-        let regNomPrenom = new RegExp("^[a-zA-Z ,.'-]+$");
-        if (regNomPrenom.test(inputLastName.value)) {
-            inputLastName.nextElementSibling.innerHTML = '<i class="fas fa-check"></i>';
-        } else {
-            inputLastName.nextElementSibling.innerHTML = 'Format de saisi inccorect';
-        } 
-    });
-
-    inputAddress.addEventListener('change',function(e){
-        e.preventDefault();
-        let regAdress = new RegExp("^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+");
-        if (regAdress.test(inputAddress.value)) {
-            inputAddress.nextElementSibling.innerHTML = '<i class="fas fa-check"></i>';
-        } else {
-            inputAddress.nextElementSibling.innerHTML = 'Format de saisi inccorect';
-        } 
-    });
-
-    inputCity.addEventListener('change',function(e){
-        e.preventDefault();
-        let regNomPrenom = new RegExp("^[a-zA-Z ,.'-]+$");
-        if (regNomPrenom.test(inputCity.value)) {
-            inputCity.nextElementSibling.innerHTML = '<i class="fas fa-check"></i>';
-        } else {
-            inputCity.nextElementSibling.innerHTML = 'Format de saisi inccorect';
-        } 
-    });
-
-    inputEmail.addEventListener('change',function(e){
-        e.preventDefault();
-        let regNomPrenom = new RegExp('^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$');
-        if (regNomPrenom.test(inputEmail.value)) {
-            inputEmail.nextElementSibling.innerHTML = '<i class="fas fa-check"></i>';
-        } else {
-            inputEmail.nextElementSibling.innerHTML = 'Format de saisi inccorect';
-        } 
-    });
+    validationForm(inputFirstName,regexLFrstNameCity);
+    validationForm(inputLastName,regexLFrstNameCity);
+    validationForm(inputAddress,regexAdress);
+    validationForm(inputCity,regexLFrstNameCity);
+    validationForm(inputEmail,regexEmail);
 
 }
 verifForm();                                // Appel de la fonction verifForm
-
 
 function envoiDataForm(){                 // Fonction permettant l'envoie des données
     
@@ -262,32 +233,48 @@ function envoiDataForm(){                 // Fonction permettant l'envoie des do
                     products: IdCom,
                 } 
         
-                console.log(infoContact);
+                console.log(verifRegex (infoContact.contact.firstName,regexLFrstNameCity));
+                console.log(verifRegex (infoContact.contact.lastName,regexLFrstNameCity));
+                console.log(verifRegex (infoContact.contact.address,regexAdress));
+                console.log(verifRegex (infoContact.contact.city,regexLFrstNameCity));
+                console.log(verifRegex (infoContact.contact.email,regexEmail));
+                
+                if (verifRegex (infoContact.contact.firstName,regexLFrstNameCity) && 
+                verifRegex (infoContact.contact.lastName,regexLFrstNameCity) && 
+                verifRegex (infoContact.contact.address,regexAdress) && 
+                verifRegex (infoContact.contact.city,regexLFrstNameCity) && 
+                verifRegex (infoContact.contact.email,regexEmail))      {
+
+                    fetch("http://localhost:3000/api/products/order", {
         
-                fetch("http://localhost:3000/api/products/order", {
-        
-                    method: 'POST',
-                    headers: {
-                        'Accept': 'application/json', 
-                        "Content-Type": "application/json" 
-                    },
-                    body: JSON.stringify(infoContact)
-                })
-                .then(function(res) {
-                    console.log(res);
-                    if (res.ok) {
-                    return res.json();
-                    }
-                })
-                .then(function(data) {
-                    localStorage.clear();
-                    localStorage.setItem("idCom",data.orderId);
-                    document.location.href = "confirmation.html";
-                })
-            
-                .catch((err) => {
-                    alert ("Envoie des données échoué " + err.message);
-                });   
+                        method: 'POST',
+                        headers: {
+                            'Accept': 'application/json', 
+                            "Content-Type": "application/json" 
+                        },
+                        body: JSON.stringify(infoContact)
+                    })
+                    .then(function(res) {
+                        console.log(res);
+                        if (res.ok) {
+                        return res.json();
+                        }
+                    })
+                    .then(function(data) {
+                        localStorage.clear();
+                        let numOrder = data.orderId;
+                        //localStorage.setItem("idCom",data.orderId);
+                        document.location.href = `confirmation.html?id=${numOrder}`;
+                    })
+                
+                    .catch((err) => {
+                        alert ("Envoie des données échoué " + err.message);
+                    }); 
+
+                }else{
+                    window.alert("Veuillez saisir correctement les données");
+                }
+          
             }else{
                 window.alert ("Envoi du formulaire impossible car Panier vide !!!");
             }

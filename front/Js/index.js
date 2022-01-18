@@ -1,13 +1,13 @@
 let apiArticle = "";
-fetch("http://localhost:3000/api/products")
-.then(function(response){
+fetch("http://localhost:3000/api/products")    // Fonction permettant d'envoyer une requête au service web afin de récuperer l'API
+.then(function(response){                     // Fonction permettant de vérifier l'état de la promise
     if (response.ok) {
-        return response.json();
+        return response.json();               // return de la promise au format json
     }
 })
-.then(function(valResponse){
+.then(function(valResponse){                   // récuperation des données retournées
     let apiArticle = valResponse;
-    appendElenment(apiArticle); 
+    appendElenment(apiArticle);                // Appel de la fonction appendElenment
 })
 .catch(function(err){
     alert ("Récuperation des données API impossible" + err.message);
